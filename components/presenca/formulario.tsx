@@ -9,6 +9,7 @@ import {
   UserCheck,
   Repeat,
   ChevronDown,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PessoaEscalada, PresencaData } from "@/lib/presenca/tipos";
@@ -30,6 +31,8 @@ export function FormularioPresenca({
   const [substituidoId, setSubstituidoId] = useState(
     dadosIniciais.substituidoId ?? "",
   );
+  const [escalado, setEscalado] = useState<PresencaData["usuario"]>();
+
   const [enviando, setEnviando] = useState(false);
 
   const data = useMemo(
@@ -81,19 +84,43 @@ export function FormularioPresenca({
     setEnviando(false);
   }
 
+  const escalaUsuario = (user: PresencaData["usuario"] | undefined) =>
+    user && (
+      <section className="flex items-center gap-3 rounded-2xl border border-(--accent-4) bg-(--accent-2) px-4 py-3 shadow-sm">
+        <div
+          aria-hidden
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-(--accent-9)/10 text-sm font-semibold"
+        >
+          {dadosIniciais.usuario.nome
+            .split(" ")
+            .slice(0, 2)
+            .map((n) => n[0])
+            .join("")}
+        </div>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium">
+            {dadosIniciais.usuario.nome}
+          </p>
+          <p className="truncate text-xs">
+            {dadosIniciais.usuario.ministerio} · {dadosIniciais.usuario.funcao}
+          </p>
+        </div>
+      </section>
+    );
+
   return (
-    <div className="min-h-dvh bg-parish-bg text-parish-text">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-4 pb-28 pt-6 sm:max-w-lg">
+    <div className="min-h-dvh">
+      <div className="mx-auto flex w-full max-w-md flex-col gap-6 px-4  py-6 sm:max-w-lg bg-(--accent-2) rounded-lg shadow-md">
         {/* Cabeçalho de navegação */}
         <div className="flex items-center gap-3">
           <Link
             href="/"
             aria-label="Voltar"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-parish-border bg-parish-surface text-parish-text transition-colors hover:bg-parish-border/30"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-(--accent-12) bg-(--accent-12) text-(--accent-4) transition-colors hover:bg-(--accent-11) hover:text-(--accent-4)"
           >
             <ArrowLeft className="h-4 w-4" strokeWidth={2} />
           </Link>
-          <h1 className="font-[family-name:var(--font-display)] text-xl font-semibold">
+          <h1 className="text-xl font-semibold">
             {modo === "editar" ? "Editar presença" : "Lançar presença"}
           </h1>
         </div>
@@ -104,7 +131,7 @@ export function FormularioPresenca({
           className="flex flex-col gap-6"
         >
           {/* Dia e horário — fixos, não editáveis */}
-          <section className="rounded-2xl bg-parish-primary px-4 py-4 text-parish-primary-foreground shadow-sm">
+          <section className="rounded-2xl bg-(--accent-1) px-4 py-4 shadow-sm">
             <div className="flex items-center gap-2 text-sm">
               <CalendarDays className="h-4 w-4 opacity-80" strokeWidth={2} />
               <span className="capitalize">{diaFormatado}</span>
@@ -113,34 +140,15 @@ export function FormularioPresenca({
               <Clock className="h-4 w-4 opacity-80" strokeWidth={2} />
               <span>{horaFormatada}</span>
             </div>
-          </section>
-
-          {/* Dados do usuário — somente leitura */}
-          <section className="flex items-center gap-3 rounded-2xl border border-parish-border bg-parish-surface px-4 py-3 shadow-sm">
-            <div
-              aria-hidden
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-parish-primary/10 font-[family-name:var(--font-display)] text-sm font-semibold text-parish-primary"
-            >
-              {dadosIniciais.usuario.nome
-                .split(" ")
-                .slice(0, 2)
-                .map((n) => n[0])
-                .join("")}
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-medium">
-                {dadosIniciais.usuario.nome}
-              </p>
-              <p className="truncate text-xs text-parish-muted">
-                {dadosIniciais.usuario.ministerio} ·{" "}
-                {dadosIniciais.usuario.funcao}
-              </p>
+            <div className="mt-1 flex items-center gap-2 text-sm">
+              <User className="h-4 w-4 opacity-80" strokeWidth={2} />
+              <span>{dadosIniciais.usuario.nome}</span>
             </div>
           </section>
 
           {/* Titular ou substituição */}
           <section className="flex flex-col gap-2">
-            <h2 className="px-1 text-sm font-semibold text-parish-muted">
+            <h2 className="px-1 text-sm font-semibold">
               Como você está servindo hoje?
             </h2>
 
@@ -149,7 +157,10 @@ export function FormularioPresenca({
                 nome="tipo-participacao"
                 valor="titular"
                 selecionado={tipo === "titular"}
-                aoSelecionar={() => setTipo("titular")}
+                aoSelecionar={() => {
+                  setTipo("titular");
+                  setEscalado(dadosIniciais.usuario);
+                }}
                 icone={UserCheck}
                 rotulo="Minha escala"
                 descricao="Estou cumprindo minha vez"
@@ -171,7 +182,7 @@ export function FormularioPresenca({
             <section className="flex flex-col gap-2">
               <label
                 htmlFor="substituido"
-                className="px-1 text-sm font-semibold text-parish-muted"
+                className="px-1 text-sm font-semibold"
               >
                 Quem você está substituindo
               </label>
@@ -182,8 +193,8 @@ export function FormularioPresenca({
                   value={substituidoId}
                   onChange={(event) => setSubstituidoId(event.target.value)}
                   className={cn(
-                    "w-full appearance-none rounded-xl border border-parish-border bg-parish-surface px-4 py-3 pr-10 text-sm text-parish-text shadow-sm",
-                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-parish-primary/50",
+                    "w-full appearance-none rounded-lg border border-(--accent-6) bg-(--accent-2) px-4 py-3 pr-10 text-sm shadow-sm",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-(--accent-8)",
                   )}
                 >
                   <option value="" disabled>
@@ -197,34 +208,31 @@ export function FormularioPresenca({
                 </select>
                 <ChevronDown
                   aria-hidden
-                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-parish-muted"
+                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2"
                 />
               </div>
             </section>
           )}
+          {escalaUsuario(escalado)}
         </form>
+        <button
+          type="submit"
+          form="formulario-presenca"
+          disabled={!podeEnviar || enviando}
+          className={cn(
+            "w-full rounded-lg bg-(--accent-9) py-3.5 text-center text-sm font-semibold text-(--accent-4) shadow-md transition-colors",
+            "hover:bg-(--accent-10) disabled:cursor-not-allowed disabled:opacity-50",
+          )}
+        >
+          {enviando
+            ? "Salvando..."
+            : modo === "editar"
+              ? "Salvar alterações"
+              : "Registrar presença"}
+        </button>
       </div>
 
       {/* Ação principal fixa no rodapé — fácil de alcançar no mobile */}
-      <div className="fixed inset-x-0 bottom-0 border-t border-parish-border bg-parish-bg/95 px-4 py-3 backdrop-blur">
-        <div className="mx-auto w-full max-w-md sm:max-w-lg">
-          <button
-            type="submit"
-            form="formulario-presenca"
-            disabled={!podeEnviar || enviando}
-            className={cn(
-              "w-full rounded-xl bg-parish-primary py-3.5 text-center text-sm font-semibold text-parish-primary-foreground shadow-md transition-colors",
-              "hover:bg-parish-primary-hover disabled:cursor-not-allowed disabled:opacity-50",
-            )}
-          >
-            {enviando
-              ? "Salvando..."
-              : modo === "editar"
-                ? "Salvar alterações"
-                : "Registrar presença"}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
@@ -253,8 +261,8 @@ function BlocoRadio({
       className={cn(
         "flex cursor-pointer flex-col gap-2 rounded-2xl border px-4 py-3 shadow-sm transition-colors",
         selecionado
-          ? "border-parish-primary bg-parish-primary/5"
-          : "border-parish-border bg-parish-surface hover:border-parish-primary/40",
+          ? "border-(--accent-11) bg-(--accent-9) text-(--accent-4)"
+          : "border-(--accent-5) bg-(--accent-2) hover:border-(--accent-8)",
       )}
     >
       <input
@@ -265,20 +273,12 @@ function BlocoRadio({
         onChange={aoSelecionar}
         className="sr-only"
       />
-      <Icone
-        className={cn(
-          "h-5 w-5",
-          selecionado ? "text-parish-primary" : "text-parish-muted",
-        )}
-        strokeWidth={2}
-      />
+      <Icone className="h-5 w-5" strokeWidth={2} />
       <span>
         <span className="block text-sm font-semibold leading-tight">
           {rotulo}
         </span>
-        <span className="mt-0.5 block text-xs leading-snug text-parish-muted">
-          {descricao}
-        </span>
+        <span className="mt-0.5 block text-xs leading-snug ">{descricao}</span>
       </span>
     </label>
   );

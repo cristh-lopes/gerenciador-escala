@@ -91,9 +91,7 @@ export default function DashboardPage() {
 
         {/* Área reservada para indicadores e gráficos futuros */}
         <section aria-label="Indicadores" className="flex flex-col gap-3">
-          <h2 className="px-1 text-sm font-bold text-parish-muted">
-            Indicadores
-          </h2>
+          <h2 className="px-1 text-sm font-bold">Indicadores</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <PlaceholderPanel
               title="Taxa de presença"
