@@ -1,0 +1,50 @@
+/*
+|--------------------------------------------------------------------------
+| Application Design Tokens
+|--------------------------------------------------------------------------
+*/
+
+:root {
+  --radius: 14px;
+
+  --app-background: var(--color-panel-solid);
+  --app-surface: var(--color-panel);
+  --app-card: var(--accent-2);
+  --app-foreground: var(--gray-12);
+  --app-card-foreground: var(--gray-12);
+
+  --app-muted: var(--gray-3);
+  --app-muted-foreground: var(--gray-11);
+
+  --app-primary: var(--accent-9);
+  --app-primary-hover: var(--accent-10);
+  --app-primary-active: var(--accent-11);
+
+  --app-primary-foreground: white;
+
+  --app-accent: var(--accent-3);
+  --app-accent-foreground: var(--accent-12);
+
+  --app-secondary: var(--gray-3);
+
+  --app-border: var(--gray-6);
+  --app-input: var(--gray-4);
+
+  --app-ring: var(--accent-8);
+
+  --app-destructive: var(--red-9);
+
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.04);
+
+  --shadow-sm: 0 2px 6px rgb(0 0 0 / 0.05);
+
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 0.08);
+}
+
+.dark {
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.25);
+
+  --shadow-sm: 0 4px 12px rgb(0 0 0 / 0.3);
+
+  --shadow-md: 0 12px 32px rgb(0 0 0 / 0.4);
+}

@@ -1,0 +1,139 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@radix-ui/themes/styles.css";
+@import "../styles/theme.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Fonts */
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-body);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* App semantic colors */
+  --color-background: var(--app-background);
+  --color-foreground: var(--app-foreground);
+
+  --color-card: var(--app-card);
+  --color-card-foreground: var(--app-card-foreground);
+
+  --color-popover: var(--app-surface);
+  --color-popover-foreground: var(--app-foreground);
+
+  --color-primary: var(--app-primary);
+  --color-primary-foreground: var(--app-primary-foreground);
+
+  --color-secondary: var(--app-secondary);
+  --color-secondary-foreground: var(--app-foreground);
+
+  --color-muted: var(--app-muted);
+  --color-muted-foreground: var(--app-muted-foreground);
+
+  --color-accent: var(--app-accent);
+  --color-accent-foreground: var(--app-accent-foreground);
+
+  --color-border: var(--app-border);
+  --color-input: var(--app-input);
+  --color-ring: var(--app-ring);
+
+  --color-destructive: var(--app-destructive);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  html {
+    font-family: var(--font-body);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: var(--font-body);
+    font-weight: 500;
+
+    background: var(--app-background);
+    color: var(--app-foreground);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    color: var(--accent-12);
+
+    font-size: clamp(2.25rem, 6vw, 3.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+
+    text-wrap: balance;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    color: var(--accent-12);
+
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.045em;
+
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  p,
+  span,
+  label,
+  input,
+  textarea,
+  button {
+    font-weight: 500;
+  }
+
+  small {
+    font-weight: 400;
+  }
+
+  strong,
+  b {
+    font-weight: 700;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--app-primary) 18%, transparent);
+  }
+}
+
+.radix-themes {
+  --default-font-family: var(--font-body);
+}
